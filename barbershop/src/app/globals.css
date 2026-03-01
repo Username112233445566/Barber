@@ -1,0 +1,34 @@
+@import "tailwindcss";
+
+:root {
+  --bg: 0 0 0;              /* black */
+  --fg: 244 244 245;        /* zinc-100 */
+  --muted: 113 113 122;     /* zinc-500 */
+  --card: 9 9 11;           /* zinc-950-ish */
+  --border: 39 39 42;       /* zinc-800 */
+  --gold: 201 162 39;       /* #C9A227 */
+  color-scheme: dark;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  background: rgb(var(--bg));
+  color: rgb(var(--fg));
+}
+
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-marquee {
+  animation: marquee 28s linear infinite;
+}
