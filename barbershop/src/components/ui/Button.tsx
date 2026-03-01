@@ -11,18 +11,18 @@ type CommonProps = {
   children: React.ReactNode;
 };
 
-type LinkProps = CommonProps & {
+type LinkButtonProps = CommonProps & {
   href: string;
-  target?: string;
+  target?: React.HTMLAttributeAnchorTarget;
   rel?: string;
 };
 
 type NativeButtonProps = CommonProps &
   React.ButtonHTMLAttributes<HTMLButtonElement> & {
-    href?: never;
+    href?: undefined;
   };
 
-type Props = LinkProps | NativeButtonProps;
+type Props = LinkButtonProps | NativeButtonProps;
 
 const base =
   "inline-flex items-center justify-center rounded-full font-medium transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[rgb(var(--gold))] disabled:opacity-50 disabled:pointer-events-none";
@@ -40,18 +40,19 @@ const sizes: Record<Size, string> = {
   lg: "h-12 px-7 text-base",
 };
 
+// ✅ type guard
+function isLinkProps(p: Props): p is LinkButtonProps {
+  return typeof (p as LinkButtonProps).href === "string";
+}
+
 export function Button(props: Props) {
-  const {
-    variant = "primary",
-    size = "md",
-    className,
-    children,
-  } = props;
+  const variant = props.variant ?? "primary";
+  const size = props.size ?? "md";
 
-  const cls = cn(base, variants[variant], sizes[size], className);
+  const cls = cn(base, variants[variant], sizes[size], props.className);
 
-  if ("href" in props) {
-    const { href, target, rel } = props;
+  if (isLinkProps(props)) {
+    const { href, target, rel, children } = props;
     return (
       <Link className={cls} href={href} target={target} rel={rel}>
         {children}
@@ -59,7 +60,7 @@ export function Button(props: Props) {
     );
   }
 
-  const { type = "button", ...rest } = props;
+  const { type = "button", children, ...rest } = props;
   return (
     <button {...rest} type={type} className={cls}>
       {children}
